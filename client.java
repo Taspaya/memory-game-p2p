@@ -101,12 +101,22 @@ public class client{
             printTablero();
             _print("Dame tu primera jugada:");
             numero1 = in.nextLine();
-            int numero = Integer.parseInt(numero1);
 
-            _print("jugada1: " + numero);
+            char[] ch = new char[numero1.length()];
+            for (int i = 0; i < numero1.length(); i++) {
+                ch[i] = numero1.charAt(i);
+            }
+  
+              //Integer.parseInt(ch[0])
+  
+            _print("jugada1: " + ch[0] + " , " + ch[2] );
             numero2 = in.nextLine();
-            numero = Integer.parseInt(numero2);
-            _print("jugada2: " + numero);
+
+            char[] _ch = new char[numero2.length()];
+            for (int i = 0; i < numero2.length(); i++) {
+                _ch[i] = numero2.charAt(i);
+            }
+            _print("jugada2: " + _ch[0] + " , " + _ch[2] );
 
             dOut.writeByte(1);
             dOut.writeBoolean(turno);
@@ -165,12 +175,22 @@ public class client{
             printTablero();
             _print("Dame tu primera jugada:");
             numero1 = in.nextLine();
-            int numero = Integer.parseInt(numero1);
 
-            _print("jugada1: " + numero);
+            char[] ch = new char[numero1.length()];
+            for (int i = 0; i < numero1.length(); i++) {
+                ch[i] = numero1.charAt(i);
+            }
+  
+              //Integer.parseInt(ch[0])
+  
+            _print("jugada1: " + ch[0] + " , " + ch[2] );
             numero2 = in.nextLine();
-            numero = Integer.parseInt(numero2);
-            _print("jugada2: " + numero);
+
+            char[] _ch = new char[numero2.length()];
+            for (int i = 0; i < numero2.length(); i++) {
+                _ch[i] = numero2.charAt(i);
+            }
+            _print("jugada2: " + _ch[0] + " , " + _ch[2] );
 
             dOut.writeByte(1);
             dOut.writeBoolean(turno);
