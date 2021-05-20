@@ -82,6 +82,13 @@ public class client{
 
   }
 
+  static boolean charToBool(char ch)
+  {
+    if(ch == 'f') return false;
+    else return true;
+  }
+
+
   public static int getRandomNumber(int min, int max) { // 0 y 4
     return (int) ((Math.random() * (max - min)) + min);
 }
@@ -131,14 +138,10 @@ public class client{
         DataInputStream dIn = new DataInputStream(cliente.getInputStream());
         // ENVIAR MENSAJE
         DataOutputStream dOut = new DataOutputStream(s.getOutputStream());
-        String texto0 = "nada";
-        String texto1 = "nada";
-        String texto2 = "nada";
-        String texto3 = "nada";
-        String texto4 = "nada";
-        String texto5 = "nada";
-        String texto6 = "nada";
-        String texto7 = "nada";
+        String[] texto = new String[8];
+        String[] booleans = new String[8];
+        Arrays.fill(texto,"nada");
+        Arrays.fill(booleans, "ffff");
         while(true)
         {
           if(turno)
@@ -165,45 +168,61 @@ public class client{
                 _ch[i] = numero2.charAt(i);
             }
             _print("Tu letra es: " + P2tablero[Character.getNumericValue(_ch[0])][Character.getNumericValue(_ch[2])]);
-              _print("Pulsa intro para continuar");
-
-              String enter = in.nextLine();
+            _print("Pulsa intro para continuar");
+            String enter = in.nextLine();
+            if(P2tablero[Character.getNumericValue(_ch[0])][Character.getNumericValue(_ch[2])] != P2tablero[Character.getNumericValue(ch[0])][Character.getNumericValue(ch[2])])
+            {
               dOut.writeByte(1);
               dOut.writeBoolean(turno);
-              dOut.writeUTF(String.valueOf(P1tablero[0]));
-              dOut.writeUTF(String.valueOf(P1tablero[1]));
-              dOut.writeUTF(String.valueOf(P1tablero[2]));
-              dOut.writeUTF(String.valueOf(P1tablero[3]));
-              dOut.writeUTF(String.valueOf(P2tablero[0]));
-              dOut.writeUTF(String.valueOf(P2tablero[1]));
-              dOut.writeUTF(String.valueOf(P2tablero[2]));
-              dOut.writeUTF(String.valueOf(P2tablero[3]));
+
+              for(int i =0; i < 4; i++ ){
+                dOut.writeUTF(String.valueOf(P1tablero[i]));
+              } 
+              for(int i =0; i < 4; i++ ){
+                dOut.writeUTF(String.valueOf(P2tablero[i]));
+              } 
+            /*  for(int i =0; i < 4; i++ ){
+                for(int j =0; j < 4; j++ ){
+                dOut.writeBoolean(b_P2tablero[i][j]);
+              }
+              } */
               turno = !turno;
+            }
+            else {
+
+              b_P2tablero[Character.getNumericValue(_ch[0])][Character.getNumericValue(_ch[2])] = true;
+              b_P2tablero[Character.getNumericValue(ch[0])][Character.getNumericValue(ch[2])] = true;
+
+            }
           }
           else {
             clear();
             _print("Espera a que el J1 haga su jugada...");
             messageType = dIn.readByte();
             turno = dIn.readBoolean();
-            texto0 = dIn.readUTF();
-            texto1 = dIn.readUTF();
-            texto2 = dIn.readUTF();
-            texto3 = dIn.readUTF();
-            texto4 = dIn.readUTF();
-            texto5 = dIn.readUTF();
-            texto6 = dIn.readUTF();
-            texto7 = dIn.readUTF();
+            for(int i = 0; i < 8; i++)
+            texto[i] = dIn.readUTF();
+            
+            for(int i = 0; i < 8; i++)
+            booleans[i] = dIn.readUTF();
 
-        for (int i = 0; i < texto0.length(); i++) {
-            P1tablero[0][i]  = texto0.charAt(i);
-            P1tablero[1][i]  = texto1.charAt(i);
-            P1tablero[2][i]  = texto2.charAt(i);
-            P1tablero[3][i]  = texto3.charAt(i); 
-            P2tablero[0][i]  = texto4.charAt(i);
-            P2tablero[1][i]  = texto5.charAt(i);
-            P2tablero[2][i]  = texto6.charAt(i);
-            P2tablero[3][i]  = texto6.charAt(i);
-        } 
+            for (int i = 0; i < texto[0].length(); i++) {
+                P1tablero[0][i]  = texto[0].charAt(i);
+                P1tablero[1][i]  = texto[1].charAt(i);
+                P1tablero[2][i]  = texto[2].charAt(i);
+                P1tablero[3][i]  = texto[3].charAt(i); 
+                P2tablero[0][i]  = texto[4].charAt(i);
+                P2tablero[1][i]  = texto[5].charAt(i);
+                P2tablero[2][i]  = texto[6].charAt(i);
+                P2tablero[3][i]  = texto[7].charAt(i);
+            } 
+
+             /* for(int i =0; i < 4; i++ ){
+                for(int j =0; j < 4; j++ ){
+                b_P2tablero[i][j] = dIn.readBoolean();
+              }
+              } */
+
           }
         }
       } catch(UnknownHostException e){
@@ -223,15 +242,12 @@ public class client{
         String numero1, numero2;
         Scanner in = new Scanner(System.in);
         byte messageType;
-        String texto0 = "nada";
-        String texto1 = "nada";
-        String texto2 = "nada";
-        String texto3 = "nada";
-        String texto4 = "nada";
-        String texto5 = "nada";
-        String texto6 = "nada";
-        String texto7 = "nada";
-                // LEER MENSAJE
+        String[] texto = new String[8];
+        String[] booleans = new String[8];
+        Arrays.fill(texto,"nada");
+        Arrays.fill(booleans, "ffff");
+
+        // LEER MENSAJE
         DataInputStream dIn = new DataInputStream(cliente.getInputStream());
         // ENVIAR MENSAJE
         DataOutputStream dOut = new DataOutputStream(s.getOutputStream());
@@ -265,42 +281,62 @@ public class client{
               _print("Tu letra es: " + P1tablero[Character.getNumericValue(_ch[0])][Character.getNumericValue(_ch[2])]);
               _print("Pulsa intro para continuar");
               String enter = in.nextLine();
+            
+            if(P1tablero[Character.getNumericValue(_ch[0])][Character.getNumericValue(_ch[2])] != P1tablero[Character.getNumericValue(ch[0])][Character.getNumericValue(ch[2])])
+            {
               dOut.writeByte(1);
               dOut.writeBoolean(turno);
-              dOut.writeUTF(String.valueOf(P1tablero[0]));
-              dOut.writeUTF(String.valueOf(P1tablero[1]));
-              dOut.writeUTF(String.valueOf(P1tablero[2]));
-              dOut.writeUTF(String.valueOf(P1tablero[3]));
-              dOut.writeUTF(String.valueOf(P2tablero[0]));
-              dOut.writeUTF(String.valueOf(P2tablero[1]));
-              dOut.writeUTF(String.valueOf(P2tablero[2]));
-              dOut.writeUTF(String.valueOf(P2tablero[3]));
+
+              for(int i =0; i < 4; i++ ){
+                dOut.writeUTF(String.valueOf(P1tablero[i]));
+              } 
+              for(int i =0; i < 4; i++ ){
+                dOut.writeUTF(String.valueOf(P2tablero[i]));
+              } 
+
+              /* for(int i =0; i < 4; i++ ){
+                for(int j =0; j < 4; j++ ){
+                dOut.writeBoolean(b_P2tablero[i][j]);
+              }
+              } */
+
               turno = !turno;
+            }
+            else {
+
+              b_P1tablero[Character.getNumericValue(_ch[0])][Character.getNumericValue(_ch[2])] = true;
+              b_P1tablero[Character.getNumericValue(ch[0])][Character.getNumericValue(ch[2])] = true;
+
+            }
           }
           else {
             clear();
-            _print("Espera a que el J1 haga su jugada...");
+            _print("Espera a que el J2 haga su jugada...");
             messageType = dIn.readByte();
             turno = dIn.readBoolean();
-            texto0 = dIn.readUTF();
-            texto1 = dIn.readUTF();
-            texto2 = dIn.readUTF();
-            texto3 = dIn.readUTF();
-            texto4 = dIn.readUTF();
-            texto5 = dIn.readUTF();
-            texto6 = dIn.readUTF();
-            texto7 = dIn.readUTF();
+            for(int i = 0; i < 8; i++)
+            texto[i] = dIn.readUTF();
 
-        for (int i = 0; i < texto0.length(); i++) {
-            P1tablero[0][i]  = texto0.charAt(i);
-            P1tablero[1][i]  = texto1.charAt(i);
-            P1tablero[2][i]  = texto2.charAt(i);
-            P1tablero[3][i]  = texto3.charAt(i); 
-            P2tablero[0][i]  = texto4.charAt(i);
-            P2tablero[1][i]  = texto5.charAt(i);
-            P2tablero[2][i]  = texto6.charAt(i);
-            P2tablero[3][i]  = texto6.charAt(i);
-        }        
+            for(int i = 0; i < 8; i++)
+            booleans[i] = dIn.readUTF();
+            
+
+        for (int i = 0; i < texto[0].length(); i++) {
+            P1tablero[0][i]  = texto[0].charAt(i);
+            P1tablero[1][i]  = texto[1].charAt(i);
+            P1tablero[2][i]  = texto[2].charAt(i);
+            P1tablero[3][i]  = texto[3].charAt(i); 
+            P2tablero[0][i]  = texto[4].charAt(i);
+            P2tablero[1][i]  = texto[5].charAt(i);
+            P2tablero[2][i]  = texto[6].charAt(i);
+            P2tablero[3][i]  = texto[7].charAt(i);
+        }
+
+       /* for(int i =0; i < 4; i++ ){
+          for(int j =0; j < 4; j++ ){
+          b_P2tablero[i][j] = dIn.readBoolean();
+        }
+        }  */       
           }
         }
       }
