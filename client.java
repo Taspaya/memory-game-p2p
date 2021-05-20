@@ -53,13 +53,11 @@ public class client{
     }
   }
 
-
   static void initTableros(char[][] tablero)
   {
     Scanner inn = new Scanner(System.in);
 
     for (int i = 0; i < Letras.length; i++) {
-      //    _print("HOLA: "+ Letras[i]);
       int numi = 0;
       int numj = 0;
       int _numi = 0;
@@ -78,8 +76,6 @@ public class client{
           _numj = getRandomNumber(0, 4);    
       }
       }
-
-      System.out.println("--> " + Letras[i] + ": " + Integer.toString(numi)  + ":" + Integer.toString(numj) + " and " + Integer.toString(_numi) + ":" + Integer.toString(_numj));
       tablero[numi][numj] = Letras[i];
       tablero[_numi][_numj] = Letras[i];
     }
@@ -92,9 +88,9 @@ public class client{
 
   static void clear() throws IOException
   {
-       try{new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();} 
-   catch(IOException ex){} 
-   catch (InterruptedException ex){}    
+    try{new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();} 
+    catch(IOException ex){} 
+    catch (InterruptedException ex){}    
   }
 
   static void _print(String cadena)
@@ -110,8 +106,6 @@ public class client{
        System.out.println("Debes usar dos argumentos ");
        return;
      }
-      initTableros(P1tablero);
-      initTableros(P2tablero);
      //transformer un argumento en entero
      int PUERTO2 = Integer.parseInt(args[2]);
      String nombreServidor = args[1];
@@ -119,56 +113,50 @@ public class client{
      boolean playing = true;
      boolean turno = true;
      String inputText;
-     Scanner in = new Scanner(System.in);
-
 
      try { // PARTE DEL CLIENTE
       ////////////////////////////////////////////////////////////!\     PARTE DEL CLIENTE (J2)   /!\///////////////////////////////////////////////////////////////////////////////////////////////////
-
+        initTableros(P1tablero);
+        initTableros(P2tablero);
         Socket s = new Socket(nombreServidor, PUERTO2);
         System.out.println("SE HA ESTABLECIDO CONEXIoN CON: \r\n");
         System.out.println("Servidor: " + nombreServidor + "\nPuerto: " + PUERTO2 +"\r\n\n\n");
-
         ServerSocket servidor = new ServerSocket(PUERTO1);
         Socket cliente = servidor.accept();
-
-        System.out.println("COMUNICACIoN BIDIRECIONAL HECHA");
-
+        // COMUNICACIÓN BIDIRECCIONAL PREPARADA
+        String numero1, numero2;
+        Scanner in = new Scanner(System.in);
+        byte messageType;
+        // LEER MENSAJE
+        DataInputStream dIn = new DataInputStream(cliente.getInputStream());
         // ENVIAR MENSAJE
         DataOutputStream dOut = new DataOutputStream(s.getOutputStream());
-        dOut.writeByte(1);
-        dOut.writeBoolean(turno);
-        dOut.writeUTF("Cliente: Hola!!!!!");
-        dOut.flush(); // Send off the data
-
-
-        // LEER Y PRINTAR MENSAJE
-        DataInputStream dIn = new DataInputStream(cliente.getInputStream());
-        byte messageType = dIn.readByte();
-        boolean _turno = dIn.readBoolean();
-        turno = _turno;
-        System.out.println(dIn.readUTF());
-        System.out.println("\n\n//TABLERO CLIENTE//\n\n");
-        String numero1, numero2;
+        String texto0 = "nada";
+        String texto1 = "nada";
+        String texto2 = "nada";
+        String texto3 = "nada";
+        String texto4 = "nada";
+        String texto5 = "nada";
+        String texto6 = "nada";
+        String texto7 = "nada";
         while(true)
         {
           if(turno)
           {
-            clear();
+            clear();  
             System.out.println("\n// <JUGADOR 2> //\n");
-            _print("Tablero del jugador 1:");
-            printTablero(P1tablero, b_P1tablero);
-            _print("Tablero del jugador 2:");
-            printTablero(P2tablero, b_P2tablero);
+              _print("Tablero del jugador 1:");
+              printTablero(P1tablero, b_P1tablero);
+              _print("Tablero del jugador 2:");
+              printTablero(P2tablero, b_P2tablero);
+
             _print("Dame tu primera jugada:");
             numero1 = in.nextLine();
-
             char[] ch = new char[numero1.length()];
             for (int i = 0; i < numero1.length(); i++) {
                 ch[i] = numero1.charAt(i);
             }
-    
-            _print("Tu letra es: " + P1tablero[Character.getNumericValue(ch[0])][Character.getNumericValue(ch[2])]);
+            _print("Tu letra es: " + P2tablero[Character.getNumericValue(ch[0])][Character.getNumericValue(ch[2])]);
             _print("Introduce tu segunda jugada");
             numero2 = in.nextLine();
 
@@ -176,12 +164,20 @@ public class client{
             for (int i = 0; i < numero2.length(); i++) {
                 _ch[i] = numero2.charAt(i);
             }
-            _print("Tu letra es: " + P1tablero[Character.getNumericValue(_ch[0])][Character.getNumericValue(_ch[2])]);
+            _print("Tu letra es: " + P2tablero[Character.getNumericValue(_ch[0])][Character.getNumericValue(_ch[2])]);
+              _print("Pulsa intro para continuar");
 
-
-              numero2 = in.nextLine();
+              String enter = in.nextLine();
               dOut.writeByte(1);
               dOut.writeBoolean(turno);
+              dOut.writeUTF(String.valueOf(P1tablero[0]));
+              dOut.writeUTF(String.valueOf(P1tablero[1]));
+              dOut.writeUTF(String.valueOf(P1tablero[2]));
+              dOut.writeUTF(String.valueOf(P1tablero[3]));
+              dOut.writeUTF(String.valueOf(P2tablero[0]));
+              dOut.writeUTF(String.valueOf(P2tablero[1]));
+              dOut.writeUTF(String.valueOf(P2tablero[2]));
+              dOut.writeUTF(String.valueOf(P2tablero[3]));
               turno = !turno;
           }
           else {
@@ -189,6 +185,25 @@ public class client{
             _print("Espera a que el J1 haga su jugada...");
             messageType = dIn.readByte();
             turno = dIn.readBoolean();
+            texto0 = dIn.readUTF();
+            texto1 = dIn.readUTF();
+            texto2 = dIn.readUTF();
+            texto3 = dIn.readUTF();
+            texto4 = dIn.readUTF();
+            texto5 = dIn.readUTF();
+            texto6 = dIn.readUTF();
+            texto7 = dIn.readUTF();
+
+        for (int i = 0; i < texto0.length(); i++) {
+            P1tablero[0][i]  = texto0.charAt(i);
+            P1tablero[1][i]  = texto1.charAt(i);
+            P1tablero[2][i]  = texto2.charAt(i);
+            P1tablero[3][i]  = texto3.charAt(i); 
+            P2tablero[0][i]  = texto4.charAt(i);
+            P2tablero[1][i]  = texto5.charAt(i);
+            P2tablero[2][i]  = texto6.charAt(i);
+            P2tablero[3][i]  = texto6.charAt(i);
+        } 
           }
         }
       } catch(UnknownHostException e){
@@ -204,25 +219,22 @@ public class client{
         turno = false;
         ServerSocket servidor = new ServerSocket(PUERTO1);
         Socket cliente = servidor.accept(); 
-        System.out.println("SE HA ESTABLECIDO CONEXION: \n\n\n");
         Socket s = new Socket(nombreServidor, PUERTO2);
-        System.out.println("COMUNICACIoN BIDIRECIONAL HECHA");
         String numero1, numero2;
-
-        // LEER MENSAJE
+        Scanner in = new Scanner(System.in);
+        byte messageType;
+        String texto0 = "nada";
+        String texto1 = "nada";
+        String texto2 = "nada";
+        String texto3 = "nada";
+        String texto4 = "nada";
+        String texto5 = "nada";
+        String texto6 = "nada";
+        String texto7 = "nada";
+                // LEER MENSAJE
         DataInputStream dIn = new DataInputStream(cliente.getInputStream());
-        byte messageType = dIn.readByte();
-        boolean _turno = dIn.readBoolean();
-        turno = _turno;
-        System.out.println(dIn.readUTF());
-
-      //comment
         // ENVIAR MENSAJE
         DataOutputStream dOut = new DataOutputStream(s.getOutputStream());
-        dOut.writeByte(1);
-        dOut.writeBoolean(!turno);
-        dOut.writeUTF("Servidor: Hola!!!!!");
-        dOut.flush(); // Send off the data
         clear();
         while(true)
         {
@@ -241,8 +253,8 @@ public class client{
             for (int i = 0; i < numero1.length(); i++) {
                 ch[i] = numero1.charAt(i);
             }
-    
-            _print("Tu letra es: " + P2tablero[Character.getNumericValue(ch[0])][Character.getNumericValue(ch[2])]);
+
+             _print("Tu letra es: " + P1tablero[Character.getNumericValue(ch[0])][Character.getNumericValue(ch[2])]);
             _print("Introduce tu segunda jugada");
             numero2 = in.nextLine();
 
@@ -250,18 +262,45 @@ public class client{
             for (int i = 0; i < numero2.length(); i++) {
                 _ch[i] = numero2.charAt(i);
             }
-            _print("Tu letra es: " + P2tablero[Character.getNumericValue(_ch[0])][Character.getNumericValue(_ch[2])]);
-
-              numero2 = in.nextLine();
+              _print("Tu letra es: " + P1tablero[Character.getNumericValue(_ch[0])][Character.getNumericValue(_ch[2])]);
+              _print("Pulsa intro para continuar");
+              String enter = in.nextLine();
               dOut.writeByte(1);
               dOut.writeBoolean(turno);
+              dOut.writeUTF(String.valueOf(P1tablero[0]));
+              dOut.writeUTF(String.valueOf(P1tablero[1]));
+              dOut.writeUTF(String.valueOf(P1tablero[2]));
+              dOut.writeUTF(String.valueOf(P1tablero[3]));
+              dOut.writeUTF(String.valueOf(P2tablero[0]));
+              dOut.writeUTF(String.valueOf(P2tablero[1]));
+              dOut.writeUTF(String.valueOf(P2tablero[2]));
+              dOut.writeUTF(String.valueOf(P2tablero[3]));
               turno = !turno;
           }
           else {
             clear();
-            _print("Espera a que el J2 haga su jugada...");
+            _print("Espera a que el J1 haga su jugada...");
             messageType = dIn.readByte();
             turno = dIn.readBoolean();
+            texto0 = dIn.readUTF();
+            texto1 = dIn.readUTF();
+            texto2 = dIn.readUTF();
+            texto3 = dIn.readUTF();
+            texto4 = dIn.readUTF();
+            texto5 = dIn.readUTF();
+            texto6 = dIn.readUTF();
+            texto7 = dIn.readUTF();
+
+        for (int i = 0; i < texto0.length(); i++) {
+            P1tablero[0][i]  = texto0.charAt(i);
+            P1tablero[1][i]  = texto1.charAt(i);
+            P1tablero[2][i]  = texto2.charAt(i);
+            P1tablero[3][i]  = texto3.charAt(i); 
+            P2tablero[0][i]  = texto4.charAt(i);
+            P2tablero[1][i]  = texto5.charAt(i);
+            P2tablero[2][i]  = texto6.charAt(i);
+            P2tablero[3][i]  = texto6.charAt(i);
+        }        
           }
         }
       }
