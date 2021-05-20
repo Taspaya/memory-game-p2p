@@ -7,29 +7,88 @@ import java.util.concurrent.TimeUnit;
 //java programa
 public class client{
 
-  static String[][] tablero =  {
-        {"A","C","G","H"},
-        {"D","H","F","F"},
-        {"A","E","B","D"},
-        {"B","G","C","E"}
+  static char[][] P1tablero =  {
+        {'Z','Z','Z','Z'},
+        {'Z','Z','Z','Z'},
+        {'Z','Z','Z','Z'},
+        {'Z','Z','Z','Z'}
       };
 
-  static String[][] Ptablero =  {
-        {"A","C","G","H"},
-        {"D","H","F","F"},
-        {"A","E","B","D"},
-        {"B","G","C","E"}
+      static boolean[][] b_P1tablero =  {
+      {false,false,false,false},
+      {false,false,false,false},
+      {false,false,false,false},
+      {false,false,false,false}
+    };
+
+  static char[][] P2tablero =  {
+        {'Z','Z','Z','Z'},
+        {'Z','Z','Z','Z'},
+        {'Z','Z','Z','Z'},
+        {'Z','Z','Z','Z'}
       };
 
-    static void printTablero()
+
+      static boolean[][] b_P2tablero =  {
+      {false,false,false,false},
+      {false,false,false,false},
+      {false,false,false,false},
+      {false,false,false,false}
+    };
+
+  static char[] Letras = {'A','B','C','D','E','F','G','H'};
+
+  static void printTablero(char[][] tablero, boolean[][] b_tablero)
   {
    for(int i = 0; i < 4; i++)
     {
       for(int j = 0; j < 4; j++)
+      {
+        if(b_tablero[i][j])
         System.out.print("'" + "X" + "'" );
-      System.out.println("\n");
+        else System.out.print("'" + tablero[i][j] + "'" );
+
+      }
+          System.out.println();
     }
   }
+
+
+  static void initTableros(char[][] tablero)
+  {
+    Scanner inn = new Scanner(System.in);
+
+    for (int i = 0; i < Letras.length; i++) {
+      //    _print("HOLA: "+ Letras[i]);
+      int numi = 0;
+      int numj = 0;
+      int _numi = 0;
+      int _numj = 0;
+
+      while((numi == _numi && numj == _numj)){
+          numi = getRandomNumber(0, 4);
+          numj = getRandomNumber(0, 4);    
+
+      while(!(tablero[numi][numj] == 'Z')){
+          numi = getRandomNumber(0, 4);
+          numj = getRandomNumber(0, 4);    
+      }
+      while(!(tablero[_numi][_numj] == 'Z' )){
+          _numi = getRandomNumber(0, 4);
+          _numj = getRandomNumber(0, 4);    
+      }
+      }
+
+      System.out.println("--> " + Letras[i] + ": " + Integer.toString(numi)  + ":" + Integer.toString(numj) + " and " + Integer.toString(_numi) + ":" + Integer.toString(_numj));
+      tablero[numi][numj] = Letras[i];
+      tablero[_numi][_numj] = Letras[i];
+    }
+
+  }
+
+  public static int getRandomNumber(int min, int max) { // 0 y 4
+    return (int) ((Math.random() * (max - min)) + min);
+}
 
   static void clear() throws IOException
   {
@@ -51,6 +110,8 @@ public class client{
        System.out.println("Debes usar dos argumentos ");
        return;
      }
+      initTableros(P1tablero);
+      initTableros(P2tablero);
      //transformer un argumento en entero
      int PUERTO2 = Integer.parseInt(args[2]);
      String nombreServidor = args[1];
@@ -94,11 +155,11 @@ public class client{
           if(turno)
           {
             clear();
-            System.out.println("\n\n// <JUGADOR 2> //\n\n");
+            System.out.println("\n// <JUGADOR 2> //\n");
             _print("Tablero del jugador 1:");
-            printTablero();
+            printTablero(P1tablero, b_P1tablero);
             _print("Tablero del jugador 2:");
-            printTablero();
+            printTablero(P2tablero, b_P2tablero);
             _print("Dame tu primera jugada:");
             numero1 = in.nextLine();
 
@@ -106,21 +167,22 @@ public class client{
             for (int i = 0; i < numero1.length(); i++) {
                 ch[i] = numero1.charAt(i);
             }
-  
-              //Integer.parseInt(ch[0])
-  
-            _print("jugada1: " + ch[0] + " , " + ch[2] );
+    
+            _print("Tu letra es: " + P1tablero[Character.getNumericValue(ch[0])][Character.getNumericValue(ch[2])]);
+            _print("Introduce tu segunda jugada");
             numero2 = in.nextLine();
 
             char[] _ch = new char[numero2.length()];
             for (int i = 0; i < numero2.length(); i++) {
                 _ch[i] = numero2.charAt(i);
             }
-            _print("jugada2: " + _ch[0] + " , " + _ch[2] );
+            _print("Tu letra es: " + P1tablero[Character.getNumericValue(_ch[0])][Character.getNumericValue(_ch[2])]);
 
-            dOut.writeByte(1);
-            dOut.writeBoolean(turno);
-            turno = !turno;
+
+              numero2 = in.nextLine();
+              dOut.writeByte(1);
+              dOut.writeBoolean(turno);
+              turno = !turno;
           }
           else {
             clear();
@@ -132,14 +194,13 @@ public class client{
       } catch(UnknownHostException e){
             System.out.print("Nombre del servidor desconocido \n"+ e +"\r\n");
       } 
-      
-      
+        
       
       
       
       catch(IOException e){ // PARTE DEL SERVIDOR
       ////////////////////////////////////////////////////////////!\     PARTE DEL SERVIDOR (J1)   /!\///////////////////////////////////////////////////////////////////////////////////////////////////
-        System.out.print("No es posible realizar la conexion, me preparo para ser el servidor\n"+ e +"\r\n");
+        System.out.print("Me preparo para ser el servidor\n"+ e +"\r\n");
         turno = false;
         ServerSocket servidor = new ServerSocket(PUERTO1);
         Socket cliente = servidor.accept(); 
@@ -168,11 +229,11 @@ public class client{
           if(turno)
           {
             clear();
-            System.out.println("\n\n// <JUGADOR 1> //\n\n");
+            System.out.println("\n// <JUGADOR 1> //\n");
             _print("Tablero del jugador 1:");
-            printTablero();
+            printTablero(P1tablero, b_P1tablero);
             _print("Tablero del jugador 2:");
-            printTablero();
+            printTablero(P2tablero, b_P2tablero);
             _print("Dame tu primera jugada:");
             numero1 = in.nextLine();
 
@@ -180,25 +241,25 @@ public class client{
             for (int i = 0; i < numero1.length(); i++) {
                 ch[i] = numero1.charAt(i);
             }
-  
-              //Integer.parseInt(ch[0])
-  
-            _print("jugada1: " + ch[0] + " , " + ch[2] );
+    
+            _print("Tu letra es: " + P2tablero[Character.getNumericValue(ch[0])][Character.getNumericValue(ch[2])]);
+            _print("Introduce tu segunda jugada");
             numero2 = in.nextLine();
 
             char[] _ch = new char[numero2.length()];
             for (int i = 0; i < numero2.length(); i++) {
                 _ch[i] = numero2.charAt(i);
             }
-            _print("jugada2: " + _ch[0] + " , " + _ch[2] );
+            _print("Tu letra es: " + P2tablero[Character.getNumericValue(_ch[0])][Character.getNumericValue(_ch[2])]);
 
-            dOut.writeByte(1);
-            dOut.writeBoolean(turno);
-            turno = !turno;
+              numero2 = in.nextLine();
+              dOut.writeByte(1);
+              dOut.writeBoolean(turno);
+              turno = !turno;
           }
           else {
             clear();
-            _print("Espera a que el J1 haga su jugada...");
+            _print("Espera a que el J2 haga su jugada...");
             messageType = dIn.readByte();
             turno = dIn.readBoolean();
           }
