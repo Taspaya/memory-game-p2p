@@ -211,7 +211,7 @@ public class client{
 
         for(int i =0; i < 4; i++ ){
           for(int j =0; j < 4; j++ ){
-            b_P2tablero[i][j] = dIn.readBoolean();
+            b_P1tablero[i][j] = dIn.readBoolean();
           }
         } 
 
@@ -221,9 +221,6 @@ public class client{
             System.out.print("Nombre del servidor desconocido \n"+ e +"\r\n");
       } 
         
-      
-      
-      
       catch(IOException e){ // PARTE DEL SERVIDOR
       ////////////////////////////////////////////////////////////!\     PARTE DEL SERVIDOR (J1)   /!\///////////////////////////////////////////////////////////////////////////////////////////////////
         System.out.print("Me preparo para ser el servidor\n"+ e +"\r\n");
@@ -246,21 +243,20 @@ public class client{
         {
           if(turno)
           {
-            clear();
+            clear();  
             System.out.println("\n// <JUGADOR 1> //\n");
-            _print("Tablero del jugador 1:");
-            printTablero(P1tablero, b_P1tablero);
-            _print("Tablero del jugador 2:");
-            printTablero(P2tablero, b_P2tablero);
+              _print("Tablero del jugador 1:");
+              printTablero(P1tablero, b_P1tablero);
+              _print("Tablero del jugador 2:");
+              printTablero(P2tablero, b_P2tablero);
+
             _print("Dame tu primera jugada:");
             numero1 = in.nextLine();
-
             char[] ch = new char[numero1.length()];
             for (int i = 0; i < numero1.length(); i++) {
                 ch[i] = numero1.charAt(i);
             }
-
-             _print("Tu letra es: " + P1tablero[Character.getNumericValue(ch[0])][Character.getNumericValue(ch[2])]);
+            _print("Tu letra es: " + P1tablero[Character.getNumericValue(ch[0])][Character.getNumericValue(ch[2])]);
             _print("Introduce tu segunda jugada");
             numero2 = in.nextLine();
 
@@ -268,68 +264,62 @@ public class client{
             for (int i = 0; i < numero2.length(); i++) {
                 _ch[i] = numero2.charAt(i);
             }
-              _print("Tu letra es: " + P1tablero[Character.getNumericValue(_ch[0])][Character.getNumericValue(_ch[2])]);
+            _print("Tu letra es: " + P1tablero[Character.getNumericValue(_ch[0])][Character.getNumericValue(_ch[2])]);
               _print("Pulsa intro para continuar");
-              String enter = in.nextLine();
-
             if(P1tablero[Character.getNumericValue(_ch[0])][Character.getNumericValue(_ch[2])] != P1tablero[Character.getNumericValue(ch[0])][Character.getNumericValue(ch[2])])
             {
-                dOut.writeByte(1);
-                dOut.writeBoolean(turno);
-                for(int i =0; i < 4; i++ ){
-                  dOut.writeUTF(String.valueOf(P1tablero[i]));
-                } 
-                for(int i =0; i < 4; i++ ){
-                  dOut.writeUTF(String.valueOf(P2tablero[i]));
-                } 
+              String enter = in.nextLine();
+              dOut.writeByte(1);
+              dOut.writeBoolean(turno);
+              for(int i =0; i < 4; i++ ){
+                dOut.writeUTF(String.valueOf(P1tablero[i]));
+              } 
+              for(int i =0; i < 4; i++ ){
+                dOut.writeUTF(String.valueOf(P2tablero[i]));
+              } 
 
               for(int i = 0; i < 4; i++ ){
                 for(int j = 0; j < 4; j++ ){
-                dOut.writeBoolean(b_P2tablero[i][j]);
+                dOut.writeBoolean(b_P1tablero[i][j]);
               }
               } 
 
-                turno = !turno;
+              turno = !turno;
             }
             else{
-                b_P1tablero[Character.getNumericValue(_ch[0])][Character.getNumericValue(_ch[2])] = true;
-                b_P1tablero[Character.getNumericValue(ch[0])][Character.getNumericValue(ch[2])] = true;
+              b_P1tablero[Character.getNumericValue(_ch[0])][Character.getNumericValue(_ch[2])] = true;
+              b_P1tablero[Character.getNumericValue(ch[0])][Character.getNumericValue(ch[2])] = true;
             }
-
-           for(int i =0; i < 4; i++ ){
-              for(int j =0; j < 4; j++ ){
-                dOut.writeBoolean(b_P1tablero[i][j]);
-              }
-            } 
-   
           }
           else {
             clear();
             _print("Espera a que el J2 haga su jugada...");
             messageType = dIn.readByte();
             turno = dIn.readBoolean();
-
+            
             for(int i = 0; i < 8; i++)
             texto[i] = dIn.readUTF();
 
-            for (int i = 0; i < texto[0].length(); i++) {
-                P1tablero[0][i]  = texto[0].charAt(i);
-                P1tablero[1][i]  = texto[1].charAt(i);
-                P1tablero[2][i]  = texto[2].charAt(i);
-                P1tablero[3][i]  = texto[3].charAt(i); 
-            }
-            for (int i = 0; i < texto[0].length(); i++) {
-                P2tablero[0][i]  = texto[4].charAt(i);
-                P2tablero[1][i]  = texto[5].charAt(i);
-                P2tablero[2][i]  = texto[6].charAt(i);
-                P2tablero[3][i]  = texto[7].charAt(i);
-            }
 
-            for(int i =0; i < 4; i++ ){
-              for(int j =0; j < 4; j++ ){
-                b_P1tablero[i][j] = dIn.readBoolean();
-              }
-            }         
+        for (int i = 0; i < texto[0].length(); i++) {
+            P1tablero[0][i]  = texto[0].charAt(i);
+            P1tablero[1][i]  = texto[1].charAt(i);
+            P1tablero[2][i]  = texto[2].charAt(i);
+            P1tablero[3][i]  = texto[3].charAt(i); 
+        }        
+        for (int i = 0; i < texto[0].length(); i++) {
+            P2tablero[0][i]  = texto[4].charAt(i);
+            P2tablero[1][i]  = texto[5].charAt(i);
+            P2tablero[2][i]  = texto[6].charAt(i);
+            P2tablero[3][i]  = texto[7].charAt(i);
+        } 
+
+        for(int i =0; i < 4; i++ ){
+          for(int j =0; j < 4; j++ ){
+            b_P2tablero[i][j] = dIn.readBoolean();
+          }
+        } 
+
           }
         }
       }
