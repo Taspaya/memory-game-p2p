@@ -124,8 +124,9 @@ public class client{
         ServerSocket servidor = new ServerSocket(PUERTO1);
         Socket cliente = servidor.accept();
 
+        String str = cliente.getRemoteSocketAddress()).getAddress()).toString().replace("/","");
         if(!s.isConnected()){
-        s = new Socket(cliente.getRemoteSocketAddress()).getAddress()).toString().replace("/",""), PUERTO2);
+        s = new Socket(str, PUERTO2);
         }
         // COMUNICACIÓN BIDIRECCIONAL PREPARADA
         String numero1, numero2;
