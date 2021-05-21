@@ -120,7 +120,7 @@ public class client{
         initTableros(P2tablero);
         Socket s = new Socket(nombreServidor, PUERTO2);
         System.out.println("SE HA ESTABLECIDO CONEXIoN CON: \r\n");
-        System.out.println("Servidor: " + nombreServidor + "\nPuerto: " + PUERTO2 +"\r\n\n\n");
+        System.out.println("Servidor: " + s.getInetAddress().toString() +"\r\n\n\n");
         ServerSocket servidor = new ServerSocket(PUERTO1);
         Socket cliente = servidor.accept();
         // COMUNICACIÓN BIDIRECCIONAL PREPARADA
@@ -138,7 +138,7 @@ public class client{
         {
           if(turno)
           {
-            clear();  
+          clear();  
             System.out.println("\n// <JUGADOR 2> //\n");
               _print("Tablero del jugador 1:");
               printTablero(P1tablero, b_P1tablero);
@@ -227,14 +227,16 @@ public class client{
         turno = false;
         ServerSocket servidor = new ServerSocket(PUERTO1);
         Socket cliente = servidor.accept(); 
-        Socket s = new Socket(nombreServidor, PUERTO2);
+        String ip=(((InetSocketAddress) cliente.getRemoteSocketAddress()).getAddress()).toString().replace("/","");
+        Socket s = new Socket(ip, PUERTO2);
         String numero1, numero2;
         Scanner in = new Scanner(System.in);
         byte messageType;
         String[] texto = new String[8];
+        System.out.println("Cliente: " + s.getRemoteSocketAddress().toString() +"\r\n\n\n");
         Arrays.fill(texto,"nada");
 
-                // LEER MENSAJE
+        // LEER MENSAJE
         DataInputStream dIn = new DataInputStream(cliente.getInputStream());
         // ENVIAR MENSAJE
         DataOutputStream dOut = new DataOutputStream(s.getOutputStream());
@@ -243,7 +245,7 @@ public class client{
         {
           if(turno)
           {
-            clear();  
+          clear();  
             System.out.println("\n// <JUGADOR 1> //\n");
               _print("Tablero del jugador 1:");
               printTablero(P1tablero, b_P1tablero);
@@ -292,7 +294,7 @@ public class client{
             }
           }
           else {
-            clear();
+            //clear();
             _print("Espera a que el J2 haga su jugada...");
             messageType = dIn.readByte();
             turno = dIn.readBoolean();
