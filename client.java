@@ -123,6 +123,9 @@ public class client{
         System.out.println("Servidor: " + s.getInetAddress().toString() +"\r\n\n\n");
         ServerSocket servidor = new ServerSocket(PUERTO1);
         Socket cliente = servidor.accept();
+
+        if(!s.isConnected())
+        s = new Socket(cliente.getRemoteSocketAddress()).getAddress()).toString().replace("/",""), PUERTO2);
         // COMUNICACIÓN BIDIRECCIONAL PREPARADA
         String numero1, numero2;
         Scanner in = new Scanner(System.in);
@@ -167,18 +170,17 @@ public class client{
               dOut.writeByte(1);
               dOut.writeBoolean(turno);
               for(int i =0; i < 4; i++ ){
-                dOut.writeUTF(String.valueOf(P1tablero[i]));
-              } 
-              for(int i =0; i < 4; i++ ){
-                dOut.writeUTF(String.valueOf(P2tablero[i]));
-              } 
+                  dOut.writeUTF(String.valueOf(P1tablero[i]));
+                } 
+                for(int i =0; i < 4; i++ ){
+                  dOut.writeUTF(String.valueOf(P2tablero[i]));
+                } 
 
-              for(int i = 0; i < 4; i++ ){
-                for(int j = 0; j < 4; j++ ){
-                dOut.writeBoolean(b_P2tablero[i][j]);
-              }
+                for(int i = 0; i < 4; i++ ){
+                  for(int j = 0; j < 4; j++ ){
+                  dOut.writeBoolean(b_P2tablero[i][j]);
+                }
               } 
-
               turno = !turno;
             }
             else{
@@ -227,7 +229,9 @@ public class client{
         turno = false;
         ServerSocket servidor = new ServerSocket(PUERTO1);
         Socket cliente = servidor.accept(); 
+        
         String ip=(((InetSocketAddress) cliente.getRemoteSocketAddress()).getAddress()).toString().replace("/","");
+
         Socket s = new Socket(ip, PUERTO2);
         String numero1, numero2;
         Scanner in = new Scanner(System.in);
