@@ -124,7 +124,7 @@ public class client{
         ServerSocket servidor = new ServerSocket(PUERTO1);
         Socket cliente = servidor.accept();
 
-        String str = cliente.getRemoteSocketAddress()).getAddress()).toString().replace("/","");
+        String str = cliente.getInetAddress().toString().replace("/","");
         if(!s.isConnected()){
         s = new Socket(str, PUERTO2);
         }
