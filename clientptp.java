@@ -44,13 +44,24 @@ public class clientptp{
     {
       for(int j = 0; j < 4; j++)
       {
-        if(b_tablero[i][j])
-        System.out.print("'" + tablero[i][j] + "'" );
+        if(b_tablero[i][j]) System.out.print("'" + tablero[i][j] + "'" );
         else System.out.print("'" + "X" + "'" );
-
       }
-          System.out.println();
+        System.out.println();
     }
+  }
+ static boolean winTablero(boolean[][] b_tablero)
+  {
+
+    for(int i = 0; i < 4; i++)
+    {
+      for(int j = 0; j < 4; j++)
+      {
+        if(b_tablero[i][j] == false) return false;
+      }
+    }
+
+    return true;
   }
 
   static void initTableros(char[][] tablero)
@@ -82,7 +93,7 @@ public class clientptp{
 
   }
 
-  public static int getRandomNumber(int min, int max) { // 0 y 4
+  public static int getRandomNumber(int min, int max) { 
     return (int) ((Math.random() * (max - min)) + min);
 }
 
@@ -100,13 +111,11 @@ public class clientptp{
 
   public static void main(String[] args) throws UnknownHostException, IOException 
   {
-     //comprobar el numero de argumentos
      if (args.length < 2){
        System.out.println("solo" + " args.length " + "argumento");
        System.out.println("Debes usar dos argumentos ");
        return;
      }
-     //transformer un argumento en entero
      int PUERTO2 = Integer.parseInt(args[2]);
      String nombreServidor = args[1];
      int PUERTO1 = Integer.parseInt(args[0]);
@@ -128,18 +137,15 @@ public class clientptp{
         if(!s.isConnected()){
         s = new Socket(str, PUERTO2);
         }
-        // COMUNICACIÓN BIDIRECCIONAL PREPARADA
         String numero1, numero2;
         Scanner in = new Scanner(System.in);
         byte messageType;
-        // LEER MENSAJE
         DataInputStream dIn = new DataInputStream(cliente.getInputStream());
-        // ENVIAR MENSAJE
         DataOutputStream dOut = new DataOutputStream(s.getOutputStream());
         String[] texto = new String[8];
         Arrays.fill(texto,"nada");
 
-        while(true)
+        while(!winTablero(b_P2tablero))
         {
           if(turno)
           {
@@ -224,6 +230,8 @@ public class clientptp{
 
           }
         }
+        clear();
+        _print("HAS GANADO!");
       } catch(UnknownHostException e){
             System.out.print("Nombre del servidor desconocido \n"+ e +"\r\n");
       } 
@@ -250,7 +258,7 @@ public class clientptp{
         // ENVIAR MENSAJE
         DataOutputStream dOut = new DataOutputStream(s.getOutputStream());
         clear();
-        while(true)
+        while(!winTablero(b_P1tablero))
         {
           if(turno)
           {
@@ -334,6 +342,8 @@ public class clientptp{
 
           }
         }
+        clear();
+        _print("HAS GANADO!");
       }
     }
   }
